@@ -1,0 +1,291 @@
+@model OrdenFormViewModel
+@{
+    ViewData["Title"] = "Nueva Orden";
+}
+
+<div class="container py-4" style="max-width: 960px;">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Ordenes" asp-action="Index">Órdenes</a></li>
+            <li class="breadcrumb-item active">Nueva</li>
+        </ol>
+    </nav>
+
+    <form asp-action="Create" method="post" id="ordenForm">
+        @Html.AntiForgeryToken()
+
+        <!-- Cabecera -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h4 class="mb-0 fw-semibold">
+                    <i class="bi bi-cart-plus me-2"></i>Nueva Orden
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="ClienteId" class="form-label"></label>
+                        <select asp-for="ClienteId" asp-items="Model.Clientes" class="form-select">
+                            <option value="">— Seleccionar cliente —</option>
+                        </select>
+                        <span asp-validation-for="ClienteId" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Observaciones" class="form-label"></label>
+                        <input asp-for="Observaciones" class="form-control"
+                               placeholder="Notas opcionales..." />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Líneas de detalle -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-semibold">
+                    <i class="bi bi-list-ul me-2"></i>Detalle de la Orden
+                </h5>
+                <button type="button" class="btn btn-sm btn-primary" id="btnAgregarLinea">
+                    <i class="bi bi-plus-circle me-1"></i>Agregar Línea
+                </button>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table mb-0" id="tablaDetalles">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 40%;">Producto</th>
+                                <th style="width: 15%;" class="text-center">Stock</th>
+                                <th style="width: 12%;" class="text-center">Cantidad</th>
+                                <th style="width: 15%;" class="text-end">Precio</th>
+                                <th style="width: 15%;" class="text-end">Subtotal</th>
+                                <th style="width: 3%;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="detallesBody">
+                            <!-- Las líneas se agregan dinámicamente con JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="emptyState" class="text-center py-4 text-muted">
+                    <i class="bi bi-cart display-6 d-block mb-2 opacity-25"></i>
+                    <span>Agregá productos usando el botón "Agregar Línea"</span>
+                </div>
+            </div>
+
+            <!-- Totales -->
+            <div class="card-footer bg-white">
+                <div class="row justify-content-end">
+                    <div class="col-md-5">
+                        <table class="table table-sm mb-0">
+                            <tr>
+                                <td class="text-muted border-0">Subtotal</td>
+                                <td class="text-end fw-medium border-0" id="subtotalDisplay">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted border-0">IVA (22%)</td>
+                                <td class="text-end fw-medium border-0" id="ivaDisplay">$0.00</td>
+                            </tr>
+                            <tr class="border-top">
+                                <td class="fw-bold">Total</td>
+                                <td class="text-end fw-bold fs-5 text-primary" id="totalDisplay">$0.00</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Validación general -->
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary btn-lg" id="btnCrearOrden">
+                <i class="bi bi-check-lg me-1"></i>Crear Orden
+            </button>
+            <a asp-action="Index" class="btn btn-outline-secondary btn-lg">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // ══════════════════════════════════════
+        // LÍNEAS DINÁMICAS DE ORDEN
+        // ══════════════════════════════════════
+
+        let lineaIndex = 0;
+        const IVA_PORCENTAJE = 0.22;
+
+        // Productos disponibles para el select (se cargan del servidor)
+        const productosSelect = `@Html.Raw(
+            string.Join("",
+                (Model.Productos ?? new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>())
+                .Select(p => $"<option value=\"{p.Value}\">{p.Text}</option>")))`;
+
+        document.getElementById('btnAgregarLinea').addEventListener('click', agregarLinea);
+
+        function agregarLinea() {
+            const tbody = document.getElementById('detallesBody');
+            const emptyState = document.getElementById('emptyState');
+            emptyState.style.display = 'none';
+
+            const tr = document.createElement('tr');
+            tr.setAttribute('data-index', lineaIndex);
+            tr.innerHTML = `
+                <td>
+                    <select name="Detalles[${lineaIndex}].ProductoId"
+                            class="form-select form-select-sm producto-select"
+                            data-index="${lineaIndex}" required>
+                        <option value="">— Seleccionar —</option>
+                        ${productosSelect}
+                    </select>
+                </td>
+                <td class="text-center">
+                    <span class="stock-display text-muted" id="stock_${lineaIndex}">—</span>
+                </td>
+                <td>
+                    <input type="number" name="Detalles[${lineaIndex}].Cantidad"
+                           class="form-control form-control-sm text-center cantidad-input"
+                           data-index="${lineaIndex}" value="1" min="1" required />
+                </td>
+                <td class="text-end">
+                    <span class="precio-display" id="precio_${lineaIndex}">$0.00</span>
+                    <input type="hidden" name="Detalles[${lineaIndex}].PrecioUnitario"
+                           id="precioInput_${lineaIndex}" value="0" />
+                </td>
+                <td class="text-end fw-medium">
+                    <span class="subtotal-display" id="subtotal_${lineaIndex}">$0.00</span>
+                    <input type="hidden" name="Detalles[${lineaIndex}].Subtotal"
+                           id="subtotalInput_${lineaIndex}" value="0" />
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-outline-danger btn-remove"
+                            data-index="${lineaIndex}" title="Eliminar">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </td>
+            `;
+
+            tbody.appendChild(tr);
+
+            // Event listeners
+            tr.querySelector('.producto-select').addEventListener('change', onProductoChange);
+            tr.querySelector('.cantidad-input').addEventListener('input', onCantidadChange);
+            tr.querySelector('.btn-remove').addEventListener('click', onRemoveLinea);
+
+            lineaIndex++;
+        }
+
+        async function onProductoChange(e) {
+            const index = e.target.dataset.index;
+            const productoId = e.target.value;
+
+            if (!productoId) {
+                resetLinea(index);
+                return;
+            }
+
+            try {
+                const response = await fetch(`/Ordenes/GetProductoInfo?id=${productoId}`);
+                if (!response.ok) throw new Error('Producto no encontrado');
+
+                const data = await response.json();
+
+                document.getElementById(`stock_${index}`).textContent = data.stock;
+                document.getElementById(`precio_${index}`).textContent = `$${data.precio.toFixed(2)}`;
+                document.getElementById(`precioInput_${index}`).value = data.precio;
+
+                // Validar cantidad vs stock
+                const cantidadInput = document.querySelector(
+                    `input[name="Detalles[${index}].Cantidad"]`);
+                cantidadInput.max = data.stock;
+
+                calcularSubtotal(index);
+            } catch (error) {
+                console.error('Error:', error);
+                resetLinea(index);
+            }
+        }
+
+        function onCantidadChange(e) {
+            const index = e.target.dataset.index;
+            calcularSubtotal(index);
+        }
+
+        function onRemoveLinea(e) {
+            const index = e.target.closest('button').dataset.index;
+            const tr = document.querySelector(`tr[data-index="${index}"]`);
+            if (tr) tr.remove();
+
+            calcularTotales();
+
+            // Mostrar empty state si no quedan líneas
+            const tbody = document.getElementById('detallesBody');
+            if (tbody.children.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+            }
+        }
+
+        function resetLinea(index) {
+            document.getElementById(`stock_${index}`).textContent = '—';
+            document.getElementById(`precio_${index}`).textContent = '$0.00';
+            document.getElementById(`precioInput_${index}`).value = 0;
+            document.getElementById(`subtotal_${index}`).textContent = '$0.00';
+            document.getElementById(`subtotalInput_${index}`).value = 0;
+            calcularTotales();
+        }
+
+        function calcularSubtotal(index) {
+            const precio = parseFloat(
+                document.getElementById(`precioInput_${index}`).value) || 0;
+            const cantidad = parseInt(
+                document.querySelector(`input[name="Detalles[${index}].Cantidad"]`).value) || 0;
+            const subtotal = precio * cantidad;
+
+            document.getElementById(`subtotal_${index}`).textContent =
+                `$${subtotal.toFixed(2)}`;
+            document.getElementById(`subtotalInput_${index}`).value = subtotal;
+
+            calcularTotales();
+        }
+
+        function calcularTotales() {
+            let subtotal = 0;
+            document.querySelectorAll('[id^="subtotalInput_"]').forEach(input => {
+                subtotal += parseFloat(input.value) || 0;
+            });
+
+            const iva = subtotal * IVA_PORCENTAJE;
+            const total = subtotal + iva;
+
+            document.getElementById('subtotalDisplay').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('ivaDisplay').textContent = `$${iva.toFixed(2)}`;
+            document.getElementById('totalDisplay').textContent = `$${total.toFixed(2)}`;
+        }
+
+        // Validar antes de enviar
+        document.getElementById('ordenForm').addEventListener('submit', function (e) {
+            const tbody = document.getElementById('detallesBody');
+            if (tbody.children.length === 0) {
+                e.preventDefault();
+                alert('Debe agregar al menos una línea de detalle.');
+                return false;
+            }
+
+            // Verificar que todos los productos estén seleccionados
+            const selects = tbody.querySelectorAll('.producto-select');
+            for (const select of selects) {
+                if (!select.value) {
+                    e.preventDefault();
+                    alert('Todos los productos deben estar seleccionados.');
+                    select.focus();
+                    return false;
+                }
+            }
+        });
+    </script>
+}

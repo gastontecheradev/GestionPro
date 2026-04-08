@@ -1,0 +1,160 @@
+@model FacturaDetalleViewModel
+@{
+    ViewData["Title"] = $"Factura {Model.NumeroFactura}";
+}
+
+<div class="container py-4" style="max-width: 800px;">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Facturas" asp-action="Index">Facturas</a></li>
+            <li class="breadcrumb-item active">@Model.NumeroFactura</li>
+        </ol>
+    </nav>
+
+    <!-- Invoice card -->
+    <div class="card border-0 shadow-sm" id="facturaPrint">
+        <!-- Header -->
+        <div class="card-header invoice-header text-white py-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h3 class="mb-1 fw-bold">
+                        <i class="bi bi-box-seam me-2"></i>GestionPro
+                    </h3>
+                    <small class="opacity-75">Sistema de Gestión Empresarial</small>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h4 class="mb-1 font-monospace">@Model.NumeroFactura</h4>
+                    <span class="badge @(Model.Pagada ? "bg-success" : "bg-warning text-dark") fs-6">
+                        @(Model.Pagada ? "PAGADA" : "PENDIENTE")
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-4">
+            <!-- Client & Invoice info -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <label class="text-muted small text-uppercase fw-semibold">Facturado a</label>
+                    <p class="fw-bold mb-1">@Model.ClienteNombre</p>
+                    @if (!string.IsNullOrEmpty(Model.ClienteRUT))
+                    {
+                        <p class="mb-1 text-muted">RUT: @Model.ClienteRUT</p>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ClienteDireccion))
+                    {
+                        <p class="mb-0 text-muted">@Model.ClienteDireccion</p>
+                    }
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="mb-2">
+                        <label class="text-muted small text-uppercase fw-semibold">Fecha emisión</label>
+                        <p class="mb-0">@Model.FechaEmision.ToString("dd/MM/yyyy")</p>
+                    </div>
+                    <div class="mb-2">
+                        <label class="text-muted small text-uppercase fw-semibold">Orden asociada</label>
+                        <p class="mb-0">
+                            <a asp-controller="Ordenes" asp-action="Details"
+                               asp-route-id="@Model.OrdenId" class="text-decoration-none font-monospace">
+                                @Model.NumeroOrden
+                            </a>
+                        </p>
+                    </div>
+                    @if (Model.Pagada && Model.FechaPago.HasValue)
+                    {
+                        <div>
+                            <label class="text-muted small text-uppercase fw-semibold">Fecha de pago</label>
+                            <p class="mb-0 text-success fw-medium">
+                                @Model.FechaPago.Value.ToString("dd/MM/yyyy")
+                            </p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Line items -->
+            <div class="table-responsive">
+                <table class="table">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Código</th>
+                            <th>Descripción</th>
+                            <th class="text-center">Cant.</th>
+                            <th class="text-end">Precio Unit.</th>
+                            <th class="text-end">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var linea in Model.Lineas)
+                        {
+                            <tr>
+                                <td class="font-monospace text-muted small">
+                                    @(linea.ProductoCodigo ?? "—")
+                                </td>
+                                <td>@linea.ProductoNombre</td>
+                                <td class="text-center">@linea.Cantidad</td>
+                                <td class="text-end">$@linea.PrecioUnitario.ToString("N2")</td>
+                                <td class="text-end fw-medium">$@linea.Subtotal.ToString("N2")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Totals -->
+            <div class="row justify-content-end">
+                <div class="col-md-5">
+                    <table class="table table-sm mb-0">
+                        <tr>
+                            <td class="text-muted border-0 py-2">Subtotal</td>
+                            <td class="text-end border-0 py-2">$@Model.Subtotal.ToString("N2")</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted border-0 py-2">IVA (@Model.PorcentajeIVA%)</td>
+                            <td class="text-end border-0 py-2">$@Model.MontoIVA.ToString("N2")</td>
+                        </tr>
+                        <tr class="border-top">
+                            <td class="fw-bold py-2 fs-5">Total</td>
+                            <td class="text-end fw-bold py-2 fs-5 text-primary">
+                                $@Model.MontoTotal.ToString("N2")
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="card-footer bg-light text-center small text-muted py-3">
+            GestionPro — Sistema de Gestión Empresarial · Gastón Techera
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="d-flex gap-2 mt-4">
+        @if (!Model.Pagada && User.IsInRole("Admin"))
+        {
+            <form asp-action="MarcarPagada" asp-route-id="@Model.Id" method="post"
+                  onsubmit="return confirm('¿Confirmar pago de esta factura?');">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check-circle me-1"></i>Marcar como Pagada
+                </button>
+            </form>
+        }
+        <button type="button" class="btn btn-outline-secondary" onclick="window.print();">
+            <i class="bi bi-printer me-1"></i>Imprimir
+        </button>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Volver
+        </a>
+    </div>
+</div>
+
+<style>
+    @@media print {
+        nav, .breadcrumb, footer, .btn, .navbar { display: none !important; }
+        .card { border: none !important; box-shadow: none !important; }
+        .main-content { padding-top: 0 !important; }
+    }
+</style>

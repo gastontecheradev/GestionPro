@@ -1,0 +1,10 @@
+@page
+@{
+    // Registro deshabilitado - redirigir al login
+}
+@functions {
+    public void OnGet()
+    {
+        HttpContext.Response.Redirect("/Identity/Account/Login");
+    }
+}

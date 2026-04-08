@@ -1,0 +1,126 @@
+@model GestionPro.Models.PagedList<FacturaListViewModel>
+@{
+    ViewData["Title"] = "Facturas";
+}
+
+<div class="container-fluid py-4 px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-receipt me-2"></i>Facturas</h2>
+            <p class="text-muted mb-0">@Model.TotalItemCount facturas emitidas</p>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body py-3">
+            <form method="get" class="row g-2 align-items-end">
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                        <input type="text" name="busqueda" class="form-control"
+                               placeholder="Buscar por nº factura, nº orden o cliente..."
+                               value="@ViewBag.BusquedaActual" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-check mt-2">
+                        <input type="checkbox" name="pendientes" value="true"
+                               class="form-check-input" id="chkPendientes"
+                               @(ViewBag.PendientesActual == true ? "checked" : "") />
+                        <label class="form-check-label" for="chkPendientes">
+                            <i class="bi bi-clock text-warning me-1"></i>Solo pendientes de pago
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-dark flex-fill">Filtrar</button>
+                    @if (!string.IsNullOrEmpty(ViewBag.BusquedaActual) || ViewBag.PendientesActual == true)
+                    {
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nº Factura</th>
+                        <th>Nº Orden</th>
+                        <th>Cliente</th>
+                        <th>Emisión</th>
+                        <th class="text-end">Monto</th>
+                        <th>Estado</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox display-6 d-block mb-2"></i>
+                                <span>No se encontraron facturas</span>
+                            </td>
+                        </tr>
+                    }
+                    @foreach (var factura in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@factura.Id"
+                                   class="text-decoration-none fw-medium font-monospace">
+                                    @factura.NumeroFactura
+                                </a>
+                            </td>
+                            <td>
+                                <a asp-controller="Ordenes" asp-action="Details"
+                                   asp-route-id="@factura.OrdenId"
+                                   class="text-decoration-none font-monospace text-muted">
+                                    @factura.NumeroOrden
+                                </a>
+                            </td>
+                            <td>@factura.ClienteNombre</td>
+                            <td class="text-muted">@factura.FechaEmision.ToString("dd/MM/yyyy")</td>
+                            <td class="text-end fw-medium">$@factura.MontoTotal.ToString("N2")</td>
+                            <td>
+                                @if (factura.Pagada)
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>Pagada
+                                    </span>
+                                    <br />
+                                    <small class="text-muted">@factura.FechaPago?.ToString("dd/MM/yyyy")</small>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-clock me-1"></i>Pendiente
+                                    </span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="Details" asp-route-id="@factura.Id"
+                                   class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-eye me-1"></i>Ver
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (Model.PageCount > 1)
+        {
+            @await Html.PartialAsync("_Pagination", Model)
+        }
+    </div>
+</div>

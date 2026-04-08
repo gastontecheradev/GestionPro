@@ -1,0 +1,225 @@
+@model OrdenDetallePageViewModel
+@{
+    ViewData["Title"] = $"Orden {Model.NumeroOrden}";
+
+    var badgeClass = Model.Estado switch
+    {
+        EstadoOrden.Pendiente => "bg-warning text-dark",
+        EstadoOrden.Aprobada => "bg-info",
+        EstadoOrden.EnPreparacion => "bg-primary",
+        EstadoOrden.Enviada => "bg-secondary",
+        EstadoOrden.Entregada => "bg-success",
+        EstadoOrden.Cancelada => "bg-danger",
+        _ => "bg-secondary"
+    };
+}
+
+<div class="container py-4" style="max-width: 960px;">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Ordenes" asp-action="Index">Órdenes</a></li>
+            <li class="breadcrumb-item active">@Model.NumeroOrden</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <div>
+                <h4 class="mb-0 fw-semibold">
+                    <i class="bi bi-cart3 me-2"></i>
+                    <span class="font-monospace">@Model.NumeroOrden</span>
+                </h4>
+            </div>
+            <span class="badge @badgeClass fs-6 px-3 py-2">@Model.Estado</span>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <label class="form-label text-muted small text-uppercase">Cliente</label>
+                    <p class="fw-medium mb-0">@Model.ClienteNombre</p>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-muted small text-uppercase">Fecha</label>
+                    <p class="mb-0">@Model.FechaOrden.ToString("dd/MM/yyyy HH:mm")</p>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-muted small text-uppercase">Creado por</label>
+                    <p class="mb-0">@(Model.CreadoPor ?? "Sistema")</p>
+                </div>
+                @if (!string.IsNullOrEmpty(Model.Observaciones))
+                {
+                    <div class="col-12">
+                        <label class="form-label text-muted small text-uppercase">Observaciones</label>
+                        <p class="mb-0">@Model.Observaciones</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Líneas de detalle -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-list-ul me-2"></i>Detalle (@Model.Lineas.Count líneas)
+            </h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Código</th>
+                        <th>Producto</th>
+                        <th class="text-center">Cantidad</th>
+                        <th class="text-end">Precio Unit.</th>
+                        <th class="text-end">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var linea in Model.Lineas)
+                    {
+                        <tr>
+                            <td>
+                                <span class="badge bg-light text-dark border font-monospace">
+                                    @(linea.ProductoCodigo ?? "—")
+                                </span>
+                            </td>
+                            <td>@linea.ProductoNombre</td>
+                            <td class="text-center">@linea.Cantidad</td>
+                            <td class="text-end">$@linea.PrecioUnitario.ToString("N2")</td>
+                            <td class="text-end fw-medium">$@linea.Subtotal.ToString("N2")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Totales -->
+        <div class="card-footer bg-white">
+            <div class="row justify-content-end">
+                <div class="col-md-4">
+                    <table class="table table-sm mb-0">
+                        <tr>
+                            <td class="text-muted border-0">Subtotal</td>
+                            <td class="text-end border-0">$@Model.Subtotal.ToString("N2")</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted border-0">IVA (@Model.PorcentajeIVA%)</td>
+                            <td class="text-end border-0">$@Model.MontoIVA.ToString("N2")</td>
+                        </tr>
+                        <tr class="border-top">
+                            <td class="fw-bold">Total</td>
+                            <td class="text-end fw-bold fs-5 text-primary">
+                                $@Model.Total.ToString("N2")
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acciones de estado -->
+    @if (Model.EstadosPermitidos.Any())
+    {
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0 fw-semibold">
+                    <i class="bi bi-arrow-right-circle me-2"></i>Cambiar Estado
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex gap-2 flex-wrap">
+                    @foreach (var estadoPermitido in Model.EstadosPermitidos)
+                    {
+                        if (estadoPermitido == EstadoOrden.Cancelada)
+                        {
+                            <!-- Cancelar usa endpoint separado (devuelve stock) -->
+                            <form asp-action="Cancelar" asp-route-id="@Model.Id" method="post"
+                                  class="d-inline"
+                                  onsubmit="return confirm('¿Cancelar esta orden? Se devolverá el stock de los productos.');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-danger">
+                                    <i class="bi bi-x-circle me-1"></i>Cancelar Orden
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            var btnClass = estadoPermitido switch
+                            {
+                                EstadoOrden.Aprobada => "btn-info",
+                                EstadoOrden.EnPreparacion => "btn-primary",
+                                EstadoOrden.Enviada => "btn-secondary",
+                                EstadoOrden.Entregada => "btn-success",
+                                _ => "btn-outline-primary"
+                            };
+                            var icon = estadoPermitido switch
+                            {
+                                EstadoOrden.Aprobada => "bi-check-circle",
+                                EstadoOrden.EnPreparacion => "bi-gear",
+                                EstadoOrden.Enviada => "bi-truck",
+                                EstadoOrden.Entregada => "bi-check2-all",
+                                _ => "bi-arrow-right"
+                            };
+
+                            <form asp-action="CambiarEstado" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <input type="hidden" name="nuevoEstado"
+                                       value="@((int)estadoPermitido)" />
+                                <button type="submit" class="btn @btnClass">
+                                    <i class="bi @icon me-1"></i>
+                                    Pasar a @estadoPermitido
+                                </button>
+                            </form>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Facturación -->
+    @if (Model.TieneFactura)
+    {
+        <div class="alert alert-success d-flex align-items-center">
+            <i class="bi bi-receipt-cutoff me-2 fs-5"></i>
+            <div>
+                Esta orden tiene una <strong>factura asociada</strong>.
+                <a asp-controller="Facturas" asp-action="Index" class="alert-link">
+                    Ver facturas
+                </a>
+            </div>
+        </div>
+    }
+    else if (Model.Estado != EstadoOrden.Pendiente && Model.Estado != EstadoOrden.Cancelada)
+    {
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="mb-1 fw-semibold">
+                        <i class="bi bi-receipt me-2"></i>Facturación
+                    </h6>
+                    <small class="text-muted">Generar factura para esta orden</small>
+                </div>
+                @if (User.IsInRole("Admin") || User.IsInRole("Vendedor"))
+                {
+                    <form asp-controller="Facturas" asp-action="GenerarDesdeOrden" method="post"
+                          onsubmit="return confirm('¿Generar factura para esta orden?');">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="ordenId" value="@Model.Id" />
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-receipt me-1"></i>Generar Factura
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    }
+
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>Volver al listado
+    </a>
+</div>

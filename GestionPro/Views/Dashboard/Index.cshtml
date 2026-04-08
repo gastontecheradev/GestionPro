@@ -1,0 +1,197 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid py-4 px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 fade-up">
+        <div>
+            <h2 class="fw-bold mb-1" style="letter-spacing:-.02em;">Dashboard</h2>
+            <p class="text-muted mb-0" style="font-size:.85rem;">Resumen general del sistema</p>
+        </div>
+        <span class="text-muted" style="font-size:.82rem;">
+            <i class="bi bi-calendar3 me-1"></i>@DateTime.Now.ToString("dddd, dd MMMM yyyy", new System.Globalization.CultureInfo("es-UY"))
+        </span>
+    </div>
+
+    <!-- ═══ METRIC CARDS ═══ -->
+    <div class="row g-3 mb-4">
+        <div class="col-xl-3 col-md-6 fade-up fade-up-d1">
+            <div class="card metric-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="metric-label mb-2">Ventas del Mes</p>
+                            <h3 class="metric-value mb-0" style="color: var(--gp-blue);">
+                                $@(((decimal)(ViewBag.VentasMes ?? 0m)).ToString("N0"))
+                            </h3>
+                        </div>
+                        <div class="metric-icon blue">
+                            <i class="bi bi-currency-dollar"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 fade-up fade-up-d2">
+            <div class="card metric-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="metric-label mb-2">Clientes</p>
+                            <h3 class="metric-value mb-0">@ViewBag.TotalClientes</h3>
+                        </div>
+                        <div class="metric-icon green">
+                            <i class="bi bi-people"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 fade-up fade-up-d3">
+            <div class="card metric-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="metric-label mb-2">Órdenes Pendientes</p>
+                            <h3 class="metric-value mb-0" style="color: var(--gp-amber);">
+                                @ViewBag.OrdenesPendientes
+                            </h3>
+                        </div>
+                        <div class="metric-icon amber">
+                            <i class="bi bi-clock"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 fade-up fade-up-d4">
+            <div class="card metric-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="metric-label mb-2">Stock Bajo</p>
+                            <h3 class="metric-value mb-0 @(((int)(ViewBag.ProductosStockBajo ?? 0)) > 0 ? "text-danger" : "")">
+                                @ViewBag.ProductosStockBajo
+                            </h3>
+                        </div>
+                        <div class="metric-icon red">
+                            <i class="bi bi-exclamation-triangle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <!-- ═══ ÚLTIMAS ÓRDENES ═══ -->
+        <div class="col-lg-8 fade-up">
+            <div class="card">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 fw-bold">
+                        <i class="bi bi-clock-history me-2" style="color:var(--gp-blue);"></i>Últimas Órdenes
+                    </h6>
+                    <a asp-controller="Ordenes" asp-action="Index"
+                       class="text-decoration-none" style="font-size:.8rem; color:var(--gp-blue);">
+                        Ver todas <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nº Orden</th>
+                                    <th>Cliente</th>
+                                    <th>Fecha</th>
+                                    <th class="text-end">Total</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.UltimasOrdenes != null)
+                                {
+                                    foreach (Orden orden in ViewBag.UltimasOrdenes)
+                                    {
+                                        var badgeClass = orden.Estado switch
+                                        {
+                                            EstadoOrden.Pendiente => "bg-warning text-dark",
+                                            EstadoOrden.Aprobada => "bg-info",
+                                            EstadoOrden.EnPreparacion => "bg-primary",
+                                            EstadoOrden.Enviada => "bg-secondary",
+                                            EstadoOrden.Entregada => "bg-success",
+                                            EstadoOrden.Cancelada => "bg-danger",
+                                            _ => "bg-secondary"
+                                        };
+                                        <tr>
+                                            <td class="fw-semibold font-monospace" style="font-size:.82rem;">
+                                                <a asp-controller="Ordenes" asp-action="Details"
+                                                   asp-route-id="@orden.Id" class="text-decoration-none">
+                                                    @orden.NumeroOrden
+                                                </a>
+                                            </td>
+                                            <td>@orden.Cliente.RazonSocial</td>
+                                            <td style="color:var(--gp-gray-400);">@orden.FechaOrden.ToString("dd/MM/yyyy")</td>
+                                            <td class="text-end fw-semibold">$@orden.Total.ToString("N2")</td>
+                                            <td><span class="badge @badgeClass">@orden.Estado</span></td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ QUICK ACTIONS ═══ -->
+        <div class="col-lg-4 fade-up fade-up-d2">
+            <div class="card mb-3">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0 fw-bold">
+                        <i class="bi bi-lightning-charge me-2" style="color:var(--gp-amber);"></i>Acciones Rápidas
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-controller="Ordenes" asp-action="Create" class="btn btn-primary">
+                            <i class="bi bi-plus-circle me-2"></i>Nueva Orden
+                        </a>
+                        <a asp-controller="Clientes" asp-action="Create" class="btn btn-outline-primary">
+                            <i class="bi bi-person-plus me-2"></i>Nuevo Cliente
+                        </a>
+                        <a asp-controller="Productos" asp-action="Create" class="btn btn-outline-primary">
+                            <i class="bi bi-box-seam me-2"></i>Nuevo Producto
+                        </a>
+                        <a asp-controller="Productos" asp-action="Index"
+                           asp-route-stockBajo="true" class="btn btn-outline-danger">
+                            <i class="bi bi-exclamation-triangle me-2"></i>Ver Stock Bajo
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3" style="font-size:.82rem; color:var(--gp-gray-400); text-transform:uppercase; letter-spacing:.08em;">
+                        <i class="bi bi-info-circle me-1"></i>Sistema
+                    </h6>
+                    <div style="font-size:.85rem;">
+                        <div class="d-flex justify-content-between mb-2 pb-2" style="border-bottom:1px solid var(--gp-gray-100);">
+                            <span style="color:var(--gp-gray-500);">Productos</span>
+                            <span class="fw-semibold">@ViewBag.TotalProductos</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 pb-2" style="border-bottom:1px solid var(--gp-gray-100);">
+                            <span style="color:var(--gp-gray-500);">Framework</span>
+                            <span class="fw-semibold">.NET 8</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span style="color:var(--gp-gray-500);">Base de datos</span>
+                            <span class="fw-semibold">SQLite</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
