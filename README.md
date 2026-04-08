@@ -46,41 +46,6 @@ GestionPro/
 └── Program.cs            ← Configuración
 ```
 
-## Requisitos
-
-- [Visual Studio 2022/2026](https://visualstudio.microsoft.com/) (o VS Code con extensión C#)
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- No requiere SQL Server — usa SQLite (archivo local)
-
-## Instalación
-
-1. Cloná el repositorio:
-   ```bash
-   git clone https://github.com/gastontecheradev/GestionPro.git
-   ```
-
-2. Abrí la solución `GestionPro.sln` en Visual Studio.
-
-3. Configurá las credenciales del admin (opcional):
-   ```bash
-   cd GestionPro/GestionPro
-   dotnet user-secrets set "SeedAdmin:Email" "tu-email@ejemplo.com"
-   dotnet user-secrets set "SeedAdmin:Password" "TuPassword123!"
-   ```
-
-4. La base de datos se crea automáticamente al ejecutar. Presioná **F5** o:
-   ```bash
-   dotnet run
-   ```
-
-## Credenciales por defecto (desarrollo)
-
-| Rol | Email | Contraseña |
-|-----|-------|------------|
-| Admin | admin@gestionpro.com | Admin123! |
-| Vendedor | vendedor@gestionpro.com | Vendedor123! |
-
-> ⚠️ Estas credenciales son solo para desarrollo local. En producción, configurá credenciales seguras mediante User Secrets o variables de entorno.
 
 ## Patrones y Prácticas
 
