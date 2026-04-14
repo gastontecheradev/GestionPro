@@ -5,10 +5,8 @@ using GestionPro.Models.Enums;
 
 namespace GestionPro.Data
 {
-    /// <summary>
     /// Inicializa la base de datos con roles, usuario administrador,
     /// y datos de ejemplo para poder probar la aplicación desde el primer momento.
-    /// </summary>
     public static class SeedData
     {
         public static async Task InicializarAsync(IServiceProvider serviceProvider)

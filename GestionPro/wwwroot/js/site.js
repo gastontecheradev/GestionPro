@@ -1,7 +1,3 @@
-// ══════════════════════════════════════
-// GestionPro — UI Interactions
-// ══════════════════════════════════════
-
 // ── Auto-dismiss alerts after 5 seconds ──
 document.addEventListener('DOMContentLoaded', () => {
     const alerts = document.querySelectorAll('.alert-dismissible');

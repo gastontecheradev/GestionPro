@@ -2,10 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GestionPro.Models.ViewModels
 {
-    /// <summary>
     /// ViewModel para crear y editar clientes.
     /// Nunca exponemos la entidad directamente a la vista.
-    /// </summary>
     public class ClienteFormViewModel
     {
         public int Id { get; set; }
@@ -38,10 +36,8 @@ namespace GestionPro.Models.ViewModels
         public string? Contacto { get; set; }
     }
 
-    /// <summary>
     /// ViewModel para mostrar clientes en listados.
     /// Incluye datos calculados que no están en la entidad.
-    /// </summary>
     public class ClienteListViewModel
     {
         public int Id { get; set; }
@@ -54,9 +50,7 @@ namespace GestionPro.Models.ViewModels
         public DateTime FechaCreacion { get; set; }
     }
 
-    /// <summary>
     /// ViewModel para la vista de detalle de un cliente.
-    /// </summary>
     public class ClienteDetalleViewModel
     {
         public int Id { get; set; }

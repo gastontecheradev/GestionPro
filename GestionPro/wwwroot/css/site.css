@@ -1,8 +1,3 @@
-/* ══════════════════════════════════════════════════════════
-   GestionPro — System UI Styles
-   Para las páginas del sistema (Layout = _Layout.cshtml)
-   ══════════════════════════════════════════════════════════ */
-
 :root {
     --gp-navy:        #1e293b;
     --gp-navy-light:  #334155;

@@ -133,10 +133,8 @@ namespace GestionPro.Data
             }
         }
 
-        /// <summary>
         /// Captura los cambios ANTES de guardar para registrarlos en AuditLog.
         /// Solo audita entidades que heredan de EntidadBase.
-        /// </summary>
         private List<AuditLog> PrepararAuditoria()
         {
             var usuario = _httpContextAccessor?.HttpContext?.User?.Identity?.Name ?? "Sistema";
@@ -224,9 +222,7 @@ namespace GestionPro.Data
             await base.SaveChangesAsync(ct);
         }
 
-        /// <summary>
-        /// Serializa solo las propiedades que cambiaron (para ediciones).
-        /// </summary>
+        /// Serializa solo las propiedades que cambiaron (para ediciones)
         private static string SerializarCambios(
             Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry, bool original)
         {
@@ -245,10 +241,8 @@ namespace GestionPro.Data
             return System.Text.Json.JsonSerializer.Serialize(cambios);
         }
 
-        /// <summary>
         /// Serializa todas las propiedades (para crear/eliminar).
         /// Excluye propiedades de navegación y campos internos.
-        /// </summary>
         private static string SerializarPropiedades(
             Microsoft.EntityFrameworkCore.ChangeTracking.PropertyValues values)
         {

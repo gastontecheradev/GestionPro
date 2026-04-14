@@ -3,11 +3,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace GestionPro.Filters
 {
-    /// <summary>
     /// Bloquea operaciones de escritura (Create, Edit, Delete) para usuarios demo.
     /// Los usuarios demo pueden ver todo pero no modificar datos.
     /// Uso: [DemoReadOnly] en acciones o controllers.
-    /// </summary>
     public class DemoReadOnlyAttribute : ActionFilterAttribute
     {
         // Emails de las cuentas demo

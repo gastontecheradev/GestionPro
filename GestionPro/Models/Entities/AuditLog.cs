@@ -1,9 +1,7 @@
 namespace GestionPro.Models.Entities
 {
-    /// <summary>
     /// Registro de auditoría. Guarda cada cambio importante en el sistema:
     /// quién modificó qué, cuándo, y los valores anteriores/nuevos en JSON.
-    /// </summary>
     public class AuditLog
     {
         public int Id { get; set; }

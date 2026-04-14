@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GestionPro.Models.ViewModels
 {
-    /// <summary>
     /// ViewModel para crear/editar una orden con sus líneas de detalle.
-    /// </summary>
     public class OrdenFormViewModel
     {
         public int Id { get; set; }
@@ -27,9 +25,7 @@ namespace GestionPro.Models.ViewModels
         public List<SelectListItem>? Productos { get; set; }
     }
 
-    /// <summary>
     /// ViewModel para cada línea de detalle en el formulario.
-    /// </summary>
     public class OrdenDetalleFormViewModel
     {
         [Required(ErrorMessage = "Seleccione un producto")]
@@ -50,9 +46,7 @@ namespace GestionPro.Models.ViewModels
         public int StockDisponible { get; set; }
     }
 
-    /// <summary>
     /// ViewModel para el listado de órdenes.
-    /// </summary>
     public class OrdenListViewModel
     {
         public int Id { get; set; }
@@ -65,9 +59,7 @@ namespace GestionPro.Models.ViewModels
         public bool TieneFactura { get; set; }
     }
 
-    /// <summary>
     /// ViewModel para la vista de detalle de una orden.
-    /// </summary>
     public class OrdenDetallePageViewModel
     {
         public int Id { get; set; }
@@ -91,9 +83,7 @@ namespace GestionPro.Models.ViewModels
         public List<EstadoOrden> EstadosPermitidos { get; set; } = new();
     }
 
-    /// <summary>
     /// Cada línea de detalle en la vista de detalle.
-    /// </summary>
     public class OrdenDetalleLineaViewModel
     {
         public string ProductoNombre { get; set; } = string.Empty;
@@ -103,9 +93,7 @@ namespace GestionPro.Models.ViewModels
         public decimal Subtotal { get; set; }
     }
 
-    /// <summary>
     /// DTO para la info de producto que devuelve el endpoint JSON (para el JS dinámico).
-    /// </summary>
     public class ProductoInfoDto
     {
         public int Id { get; set; }

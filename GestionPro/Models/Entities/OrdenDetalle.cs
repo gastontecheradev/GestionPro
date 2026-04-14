@@ -2,10 +2,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GestionPro.Models.Entities
 {
-    /// <summary>
     /// Línea de detalle de una Orden. NO hereda de EntidadBase porque
     /// su ciclo de vida depende de la Orden padre (Aggregate Root pattern).
-    /// </summary>
     public class OrdenDetalle
     {
         public int Id { get; set; }

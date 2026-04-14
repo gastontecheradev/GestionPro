@@ -2,10 +2,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GestionPro.Models
 {
-    /// <summary>
     /// Lista paginada genérica. Reemplaza X.PagedList para evitar
     /// incompatibilidades de versión. Funciona con cualquier IQueryable.
-    /// </summary>
     public class PagedList<T> : List<T>
     {
         public int PageNumber { get; }
@@ -28,9 +26,7 @@ namespace GestionPro.Models
             AddRange(items);
         }
 
-        /// <summary>
         /// Crea una lista paginada desde un IQueryable (ejecuta COUNT + SKIP/TAKE en SQL).
-        /// </summary>
         public static async Task<PagedList<T>> CreateAsync(
             IQueryable<T> source, int pageNumber, int pageSize)
         {

@@ -137,10 +137,8 @@ namespace GestionPro.Controllers
 
         // ── API JSON para el JavaScript dinámico ──
 
-        /// <summary>
         /// Devuelve info del producto (precio, stock) para las líneas dinámicas.
         /// Llamado via AJAX desde el formulario de crear orden.
-        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetProductoInfo(int id)
         {

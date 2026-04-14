@@ -296,11 +296,9 @@ namespace GestionPro.Services.Implementations
             return $"{prefijo}{siguienteNumero:D4}";
         }
 
-        /// <summary>
         /// Define las transiciones de estado válidas.
         /// Pendiente → Aprobada → EnPreparacion → Enviada → Entregada
         /// Cualquiera (excepto Entregada) → Cancelada
-        /// </summary>
         private static List<EstadoOrden> ObtenerEstadosPermitidos(EstadoOrden estadoActual)
         {
             return estadoActual switch

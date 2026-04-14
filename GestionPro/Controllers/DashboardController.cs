@@ -27,7 +27,7 @@ namespace GestionPro.Controllers
                 .CountAsync(o => o.Estado == EstadoOrden.Pendiente);
 
             // Ventas del mes actual
-            // SQLite no soporta Sum sobre decimal, así que traemos los totales a memoria
+            // SQLite no soporta Sum sobre decimal, se traen los totales a memoria
             var inicioMes = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
             var totalesMes = await _context.Ordenes
                 .Where(o => o.FechaOrden >= inicioMes
