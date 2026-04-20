@@ -2,6 +2,8 @@
 
 Management system for wholesale distribution built with **ASP.NET Core 8 MVC**, **Entity Framework Core**, and **SQLite**.
 
+🔗 **Live site:** [GestionPro](https://gestionpro.somee.com/)
+
 ## Features
 
 - **Customer Management** — Full CRUD with server-side search and pagination
