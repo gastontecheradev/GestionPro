@@ -6,7 +6,7 @@
 <div class="container py-4" style="max-width: 800px;">
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="Clientes" asp-action="Index">Clientes</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Clientes" asp-action="Index" data-i18n="nav.clientes">Clientes</a></li>
             <li class="breadcrumb-item active">@Model.RazonSocial</li>
         </ol>
     </nav>
@@ -18,7 +18,7 @@
             </h4>
             <div class="btn-group btn-group-sm">
                 <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">
-                    <i class="bi bi-pencil me-1"></i>Editar
+                    <i class="bi bi-pencil me-1"></i><span data-i18n="common.editar">Editar</span>
                 </a>
             </div>
         </div>
@@ -26,30 +26,30 @@
             <div class="row g-4">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label class="form-label text-muted small text-uppercase">Razón Social</label>
+                        <label class="form-label text-muted small text-uppercase" data-i18n="clientes.thRazonSocial">Razón Social</label>
                         <p class="fw-medium mb-0">@Model.RazonSocial</p>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-muted small text-uppercase">RUT</label>
-                        <p class="mb-0">@(Model.RUT ?? "No especificado")</p>
+                        <label class="form-label text-muted small text-uppercase" data-i18n="clientes.thRUT">RUT</label>
+                        <p class="mb-0">@(Model.RUT ?? "—")</p>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-muted small text-uppercase">Dirección</label>
-                        <p class="mb-0">@(Model.Direccion ?? "No especificada")</p>
+                        <label class="form-label text-muted small text-uppercase" data-i18n="detail.direccion">Dirección</label>
+                        <p class="mb-0">@(Model.Direccion ?? "—")</p>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label class="form-label text-muted small text-uppercase">Teléfono</label>
-                        <p class="mb-0">@(Model.Telefono ?? "No especificado")</p>
+                        <label class="form-label text-muted small text-uppercase" data-i18n="clientes.thTelefono">Teléfono</label>
+                        <p class="mb-0">@(Model.Telefono ?? "—")</p>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-muted small text-uppercase">Email</label>
-                        <p class="mb-0">@(Model.Email ?? "No especificado")</p>
+                        <label class="form-label text-muted small text-uppercase" data-i18n="clientes.thEmail">Email</label>
+                        <p class="mb-0">@(Model.Email ?? "—")</p>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-muted small text-uppercase">Persona de Contacto</label>
-                        <p class="mb-0">@(Model.Contacto ?? "No especificado")</p>
+                        <label class="form-label text-muted small text-uppercase" data-i18n="detail.contacto">Persona de Contacto</label>
+                        <p class="mb-0">@(Model.Contacto ?? "—")</p>
                     </div>
                 </div>
             </div>
@@ -59,21 +59,21 @@
             <div class="row small text-muted">
                 <div class="col-md-4">
                     <i class="bi bi-calendar me-1"></i>
-                    Creado: @Model.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
+                    <span data-i18n="detail.creado">Creado</span>: @Model.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
                 </div>
                 <div class="col-md-4">
                     <i class="bi bi-clock me-1"></i>
-                    Modificado: @(Model.FechaModificacion?.ToString("dd/MM/yyyy HH:mm") ?? "Nunca")
+                    <span data-i18n="detail.modificado">Modificado</span>: @(Model.FechaModificacion?.ToString("dd/MM/yyyy HH:mm") ?? "—")
                 </div>
                 <div class="col-md-4">
                     <i class="bi bi-person me-1"></i>
-                    Creado por: @(Model.CreadoPor ?? "Sistema")
+                    <span data-i18n="detail.creadoPor">Creado por</span>: @(Model.CreadoPor ?? "Sistema")
                 </div>
             </div>
         </div>
     </div>
 
     <a asp-action="Index" class="btn btn-outline-secondary mt-3">
-        <i class="bi bi-arrow-left me-1"></i>Volver al listado
+        <i class="bi bi-arrow-left me-1"></i><span data-i18n="common.volver">Volver al listado</span>
     </a>
 </div>

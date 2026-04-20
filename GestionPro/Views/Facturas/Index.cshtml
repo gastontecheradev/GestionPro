@@ -6,12 +6,11 @@
 <div class="container-fluid py-4 px-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold mb-1"><i class="bi bi-receipt me-2"></i>Facturas</h2>
-            <p class="text-muted mb-0">@Model.TotalItemCount facturas emitidas</p>
+            <h2 class="fw-bold mb-1"><i class="bi bi-receipt me-2"></i><span data-i18n="facturas.title">Facturas</span></h2>
+            <p class="text-muted mb-0">@Model.TotalItemCount <span data-i18n="facturas.emitidas">facturas emitidas</span></p>
         </div>
     </div>
 
-    <!-- Filters -->
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body py-3">
             <form method="get" class="row g-2 align-items-end">
@@ -19,6 +18,7 @@
                     <div class="input-group">
                         <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
                         <input type="text" name="busqueda" class="form-control"
+                               data-i18n-placeholder="facturas.buscarPlaceholder"
                                placeholder="Buscar por nº factura, nº orden o cliente..."
                                value="@ViewBag.BusquedaActual" />
                     </div>
@@ -29,12 +29,12 @@
                                class="form-check-input" id="chkPendientes"
                                @(ViewBag.PendientesActual == true ? "checked" : "") />
                         <label class="form-check-label" for="chkPendientes">
-                            <i class="bi bi-clock text-warning me-1"></i>Solo pendientes de pago
+                            <i class="bi bi-clock text-warning me-1"></i><span data-i18n="facturas.soloPendientes">Solo pendientes de pago</span>
                         </label>
                     </div>
                 </div>
                 <div class="col-md-4 d-flex gap-2">
-                    <button type="submit" class="btn btn-dark flex-fill">Filtrar</button>
+                    <button type="submit" class="btn btn-dark flex-fill" data-i18n="facturas.filtrar">Filtrar</button>
                     @if (!string.IsNullOrEmpty(ViewBag.BusquedaActual) || ViewBag.PendientesActual == true)
                     {
                         <a asp-action="Index" class="btn btn-outline-secondary">
@@ -46,19 +46,18 @@
         </div>
     </div>
 
-    <!-- Table -->
     <div class="card border-0 shadow-sm">
         <div class="table-responsive">
             <table class="table table-hover mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>Nº Factura</th>
-                        <th>Nº Orden</th>
-                        <th>Cliente</th>
-                        <th>Emisión</th>
-                        <th class="text-end">Monto</th>
-                        <th>Estado</th>
-                        <th class="text-end">Acciones</th>
+                        <th data-i18n="facturas.thFactura">Nº Factura</th>
+                        <th data-i18n="facturas.thOrden">Nº Orden</th>
+                        <th data-i18n="facturas.thCliente">Cliente</th>
+                        <th data-i18n="facturas.thEmision">Emisión</th>
+                        <th class="text-end" data-i18n="facturas.thMonto">Monto</th>
+                        <th data-i18n="facturas.thEstado">Estado</th>
+                        <th class="text-end" data-i18n="facturas.thAcciones">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,7 +66,7 @@
                         <tr>
                             <td colspan="7" class="text-center py-5 text-muted">
                                 <i class="bi bi-inbox display-6 d-block mb-2"></i>
-                                <span>No se encontraron facturas</span>
+                                <span data-i18n="facturas.sinResultados">No se encontraron facturas</span>
                             </td>
                         </tr>
                     }
@@ -94,7 +93,7 @@
                                 @if (factura.Pagada)
                                 {
                                     <span class="badge bg-success">
-                                        <i class="bi bi-check-circle me-1"></i>Pagada
+                                        <i class="bi bi-check-circle me-1"></i><span data-i18n="facturas.pagada">Pagada</span>
                                     </span>
                                     <br />
                                     <small class="text-muted">@factura.FechaPago?.ToString("dd/MM/yyyy")</small>
@@ -102,14 +101,14 @@
                                 else
                                 {
                                     <span class="badge bg-warning text-dark">
-                                        <i class="bi bi-clock me-1"></i>Pendiente
+                                        <i class="bi bi-clock me-1"></i><span data-i18n="facturas.pendiente">Pendiente</span>
                                     </span>
                                 }
                             </td>
                             <td class="text-end">
                                 <a asp-action="Details" asp-route-id="@factura.Id"
                                    class="btn btn-sm btn-outline-secondary">
-                                    <i class="bi bi-eye me-1"></i>Ver
+                                    <i class="bi bi-eye me-1"></i><span data-i18n="facturas.ver">Ver</span>
                                 </a>
                             </td>
                         </tr>

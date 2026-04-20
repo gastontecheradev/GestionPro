@@ -6,15 +6,14 @@
 <div class="container-fluid py-4 px-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold mb-1"><i class="bi bi-cart3 me-2"></i>Órdenes</h2>
-            <p class="text-muted mb-0">@Model.TotalItemCount órdenes registradas</p>
+            <h2 class="fw-bold mb-1"><i class="bi bi-cart3 me-2"></i><span data-i18n="ordenes.title">Órdenes</span></h2>
+            <p class="text-muted mb-0">@Model.TotalItemCount <span data-i18n="ordenes.registradas">órdenes registradas</span></p>
         </div>
         <a asp-action="Create" class="btn btn-primary">
-            <i class="bi bi-plus-circle me-2"></i>Nueva Orden
+            <i class="bi bi-plus-circle me-2"></i><span data-i18n="ordenes.nueva">Nueva Orden</span>
         </a>
     </div>
 
-    <!-- Filters -->
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body py-3">
             <form method="get" class="row g-2 align-items-end">
@@ -22,13 +21,14 @@
                     <div class="input-group">
                         <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
                         <input type="text" name="busqueda" class="form-control"
+                               data-i18n-placeholder="ordenes.buscarPlaceholder"
                                placeholder="Buscar por número de orden o cliente..."
                                value="@ViewBag.BusquedaActual" />
                     </div>
                 </div>
                 <div class="col-md-3">
                     <select name="estado" class="form-select">
-                        <option value="">Todos los estados</option>
+                        <option value="" data-i18n="ordenes.todosEstados">Todos los estados</option>
                         @foreach (EstadoOrden e in Enum.GetValues(typeof(EstadoOrden)))
                         {
                             var selected = ViewBag.EstadoActual != null &&
@@ -38,7 +38,7 @@
                     </select>
                 </div>
                 <div class="col-md-4 d-flex gap-2">
-                    <button type="submit" class="btn btn-dark flex-fill">Filtrar</button>
+                    <button type="submit" class="btn btn-dark flex-fill" data-i18n="ordenes.filtrar">Filtrar</button>
                     @if (!string.IsNullOrEmpty(ViewBag.BusquedaActual) || ViewBag.EstadoActual != null)
                     {
                         <a asp-action="Index" class="btn btn-outline-secondary">
@@ -50,20 +50,19 @@
         </div>
     </div>
 
-    <!-- Table -->
     <div class="card border-0 shadow-sm">
         <div class="table-responsive">
             <table class="table table-hover mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>Nº Orden</th>
-                        <th>Cliente</th>
-                        <th>Fecha</th>
-                        <th class="text-center">Líneas</th>
-                        <th class="text-end">Total</th>
-                        <th>Estado</th>
-                        <th class="text-center">Factura</th>
-                        <th class="text-end">Acciones</th>
+                        <th data-i18n="ordenes.thOrden">Nº Orden</th>
+                        <th data-i18n="ordenes.thCliente">Cliente</th>
+                        <th data-i18n="ordenes.thFecha">Fecha</th>
+                        <th class="text-center" data-i18n="ordenes.thLineas">Líneas</th>
+                        <th class="text-end" data-i18n="ordenes.thTotal">Total</th>
+                        <th data-i18n="ordenes.thEstado">Estado</th>
+                        <th class="text-center" data-i18n="ordenes.thFactura">Factura</th>
+                        <th class="text-end" data-i18n="ordenes.thAcciones">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -72,7 +71,7 @@
                         <tr>
                             <td colspan="8" class="text-center py-5 text-muted">
                                 <i class="bi bi-inbox display-6 d-block mb-2"></i>
-                                <span>No se encontraron órdenes</span>
+                                <span data-i18n="ordenes.sinResultados">No se encontraron órdenes</span>
                             </td>
                         </tr>
                     }
@@ -113,7 +112,7 @@
                             <td class="text-end">
                                 <a asp-action="Details" asp-route-id="@orden.Id"
                                    class="btn btn-sm btn-outline-secondary">
-                                    <i class="bi bi-eye me-1"></i>Ver
+                                    <i class="bi bi-eye me-1"></i><span data-i18n="ordenes.ver">Ver</span>
                                 </a>
                             </td>
                         </tr>

@@ -1,7 +1,6 @@
 @model OrdenDetallePageViewModel
 @{
     ViewData["Title"] = $"Orden {Model.NumeroOrden}";
-
     var badgeClass = Model.Estado switch
     {
         EstadoOrden.Pendiente => "bg-warning text-dark",
@@ -17,7 +16,7 @@
 <div class="container py-4" style="max-width: 960px;">
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="Ordenes" asp-action="Index">Órdenes</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Ordenes" asp-action="Index" data-i18n="nav.ordenes">Órdenes</a></li>
             <li class="breadcrumb-item active">@Model.NumeroOrden</li>
         </ol>
     </nav>
@@ -36,21 +35,21 @@
         <div class="card-body">
             <div class="row g-4">
                 <div class="col-md-4">
-                    <label class="form-label text-muted small text-uppercase">Cliente</label>
+                    <label class="form-label text-muted small text-uppercase" data-i18n="clientes.thRazonSocial">Cliente</label>
                     <p class="fw-medium mb-0">@Model.ClienteNombre</p>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label text-muted small text-uppercase">Fecha</label>
+                    <label class="form-label text-muted small text-uppercase" data-i18n="dashboard.thFecha">Fecha</label>
                     <p class="mb-0">@Model.FechaOrden.ToString("dd/MM/yyyy HH:mm")</p>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label text-muted small text-uppercase">Creado por</label>
+                    <label class="form-label text-muted small text-uppercase" data-i18n="detail.creadoPor">Creado por</label>
                     <p class="mb-0">@(Model.CreadoPor ?? "Sistema")</p>
                 </div>
                 @if (!string.IsNullOrEmpty(Model.Observaciones))
                 {
                     <div class="col-12">
-                        <label class="form-label text-muted small text-uppercase">Observaciones</label>
+                        <label class="form-label text-muted small text-uppercase" data-i18n="ordenes.observaciones">Observaciones</label>
                         <p class="mb-0">@Model.Observaciones</p>
                     </div>
                 }
@@ -62,18 +61,18 @@
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-header bg-white">
             <h5 class="mb-0 fw-semibold">
-                <i class="bi bi-list-ul me-2"></i>Detalle (@Model.Lineas.Count líneas)
+                <i class="bi bi-list-ul me-2"></i><span data-i18n="ordenes.detalle">Detalle</span> (@Model.Lineas.Count <span data-i18n="ordenes.lineas">líneas</span>)
             </h5>
         </div>
         <div class="table-responsive">
             <table class="table mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>Código</th>
-                        <th>Producto</th>
-                        <th class="text-center">Cantidad</th>
-                        <th class="text-end">Precio Unit.</th>
-                        <th class="text-end">Subtotal</th>
+                        <th data-i18n="productos.thCodigo">Código</th>
+                        <th data-i18n="productos.thNombre">Producto</th>
+                        <th class="text-center" data-i18n="ordenes.thCantidad">Cantidad</th>
+                        <th class="text-end" data-i18n="ordenes.precioUnit">Precio Unit.</th>
+                        <th class="text-end" data-i18n="ordenes.thSubtotal">Subtotal</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -101,7 +100,7 @@
                 <div class="col-md-4">
                     <table class="table table-sm mb-0">
                         <tr>
-                            <td class="text-muted border-0">Subtotal</td>
+                            <td class="text-muted border-0" data-i18n="ordenes.subtotal">Subtotal</td>
                             <td class="text-end border-0">$@Model.Subtotal.ToString("N2")</td>
                         </tr>
                         <tr>
@@ -109,10 +108,8 @@
                             <td class="text-end border-0">$@Model.MontoIVA.ToString("N2")</td>
                         </tr>
                         <tr class="border-top">
-                            <td class="fw-bold">Total</td>
-                            <td class="text-end fw-bold fs-5 text-primary">
-                                $@Model.Total.ToString("N2")
-                            </td>
+                            <td class="fw-bold" data-i18n="ordenes.total">Total</td>
+                            <td class="text-end fw-bold fs-5 text-primary">$@Model.Total.ToString("N2")</td>
                         </tr>
                     </table>
                 </div>
@@ -120,13 +117,13 @@
         </div>
     </div>
 
-    <!-- Acciones de estado -->
+    <!-- Cambiar Estado -->
     @if (Model.EstadosPermitidos.Any())
     {
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-header bg-white">
                 <h5 class="mb-0 fw-semibold">
-                    <i class="bi bi-arrow-right-circle me-2"></i>Cambiar Estado
+                    <i class="bi bi-arrow-right-circle me-2"></i><span data-i18n="ordenes.cambiarEstado">Cambiar Estado</span>
                 </h5>
             </div>
             <div class="card-body">
@@ -135,13 +132,13 @@
                     {
                         if (estadoPermitido == EstadoOrden.Cancelada)
                         {
-                            <!-- Cancelar usa endpoint separado (devuelve stock) -->
                             <form asp-action="Cancelar" asp-route-id="@Model.Id" method="post"
                                   class="d-inline"
+                                  data-i18n-confirm="ordenes.confirmarCancelar"
                                   onsubmit="return confirm('¿Cancelar esta orden? Se devolverá el stock de los productos.');">
                                 @Html.AntiForgeryToken()
                                 <button type="submit" class="btn btn-outline-danger">
-                                    <i class="bi bi-x-circle me-1"></i>Cancelar Orden
+                                    <i class="bi bi-x-circle me-1"></i><span data-i18n="ordenes.cancelarOrden">Cancelar Orden</span>
                                 </button>
                             </form>
                         }
@@ -163,15 +160,13 @@
                                 EstadoOrden.Entregada => "bi-check2-all",
                                 _ => "bi-arrow-right"
                             };
-
                             <form asp-action="CambiarEstado" method="post" class="d-inline">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="id" value="@Model.Id" />
-                                <input type="hidden" name="nuevoEstado"
-                                       value="@((int)estadoPermitido)" />
+                                <input type="hidden" name="nuevoEstado" value="@((int)estadoPermitido)" />
                                 <button type="submit" class="btn @btnClass">
                                     <i class="bi @icon me-1"></i>
-                                    Pasar a @estadoPermitido
+                                    <span data-i18n="ordenes.pasarA">Pasar a</span> @estadoPermitido
                                 </button>
                             </form>
                         }
@@ -187,10 +182,8 @@
         <div class="alert alert-success d-flex align-items-center">
             <i class="bi bi-receipt-cutoff me-2 fs-5"></i>
             <div>
-                Esta orden tiene una <strong>factura asociada</strong>.
-                <a asp-controller="Facturas" asp-action="Index" class="alert-link">
-                    Ver facturas
-                </a>
+                <span data-i18n="ordenes.tieneFactura">Esta orden tiene una</span> <strong data-i18n="ordenes.facturaAsociada">factura asociada</strong>.
+                <a asp-controller="Facturas" asp-action="Index" class="alert-link" data-i18n="ordenes.verFacturas">Ver facturas</a>
             </div>
         </div>
     }
@@ -200,18 +193,19 @@
             <div class="card-body d-flex justify-content-between align-items-center">
                 <div>
                     <h6 class="mb-1 fw-semibold">
-                        <i class="bi bi-receipt me-2"></i>Facturación
+                        <i class="bi bi-receipt me-2"></i><span data-i18n="nav.facturas">Facturación</span>
                     </h6>
-                    <small class="text-muted">Generar factura para esta orden</small>
+                    <small class="text-muted" data-i18n="ordenes.generarFacturaDesc">Generar factura para esta orden</small>
                 </div>
                 @if (User.IsInRole("Admin") || User.IsInRole("Vendedor"))
                 {
                     <form asp-controller="Facturas" asp-action="GenerarDesdeOrden" method="post"
+                          data-i18n-confirm="ordenes.confirmarGenerarFactura"
                           onsubmit="return confirm('¿Generar factura para esta orden?');">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="ordenId" value="@Model.Id" />
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-receipt me-1"></i>Generar Factura
+                            <i class="bi bi-receipt me-1"></i><span data-i18n="ordenes.generarFactura">Generar Factura</span>
                         </button>
                     </form>
                 }
@@ -220,6 +214,6 @@
     }
 
     <a asp-action="Index" class="btn btn-outline-secondary">
-        <i class="bi bi-arrow-left me-1"></i>Volver al listado
+        <i class="bi bi-arrow-left me-1"></i><span data-i18n="common.volver">Volver al listado</span>
     </a>
 </div>

@@ -3,17 +3,22 @@
 <div class="row g-3">
     <div class="col-md-8">
         <label asp-for="Nombre" class="form-label"></label>
-        <input asp-for="Nombre" class="form-control" placeholder="Ej: Agua Mineral Salus 1.5L" />
+        <input asp-for="Nombre" class="form-control"
+               data-i18n-placeholder="form.productoNombrePlaceholder"
+               placeholder="Ej: Agua Mineral Salus 1.5L" />
         <span asp-validation-for="Nombre" class="text-danger small"></span>
     </div>
     <div class="col-md-4">
         <label asp-for="Codigo" class="form-label"></label>
-        <input asp-for="Codigo" class="form-control" placeholder="Ej: BEB-001" />
+        <input asp-for="Codigo" class="form-control"
+               data-i18n-placeholder="form.codigoPlaceholder"
+               placeholder="Ej: BEB-001" />
         <span asp-validation-for="Codigo" class="text-danger small"></span>
     </div>
     <div class="col-12">
         <label asp-for="Descripcion" class="form-label"></label>
         <textarea asp-for="Descripcion" class="form-control" rows="3"
+                  data-i18n-placeholder="form.descripcionPlaceholder"
                   placeholder="Descripción del producto..."></textarea>
         <span asp-validation-for="Descripcion" class="text-danger small"></span>
     </div>
@@ -38,13 +43,15 @@
     <div class="col-md-6">
         <label asp-for="CategoriaId" class="form-label"></label>
         <select asp-for="CategoriaId" asp-items="Model.Categorias" class="form-select">
-            <option value="">— Seleccionar categoría —</option>
+            <option value="" data-i18n="form.seleccionarCategoria">— Seleccionar categoría —</option>
         </select>
         <span asp-validation-for="CategoriaId" class="text-danger small"></span>
     </div>
     <div class="col-md-6">
         <label asp-for="ImagenUrl" class="form-label"></label>
-        <input asp-for="ImagenUrl" class="form-control" placeholder="https://ejemplo.com/imagen.jpg" />
+        <input asp-for="ImagenUrl" class="form-control"
+               data-i18n-placeholder="form.imagenUrlPlaceholder"
+               placeholder="https://ejemplo.com/imagen.jpg" />
         <span asp-validation-for="ImagenUrl" class="text-danger small"></span>
     </div>
 </div>

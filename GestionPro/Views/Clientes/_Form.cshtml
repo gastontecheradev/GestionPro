@@ -3,32 +3,44 @@
 <div class="row g-3">
     <div class="col-md-8">
         <label asp-for="RazonSocial" class="form-label"></label>
-        <input asp-for="RazonSocial" class="form-control" placeholder="Ej: Supermercado El Dorado S.A." />
+        <input asp-for="RazonSocial" class="form-control"
+               data-i18n-placeholder="form.razonSocialPlaceholder"
+               placeholder="Ej: Supermercado El Dorado S.A." />
         <span asp-validation-for="RazonSocial" class="text-danger small"></span>
     </div>
     <div class="col-md-4">
         <label asp-for="RUT" class="form-label"></label>
-        <input asp-for="RUT" class="form-control" placeholder="Ej: 210123456789" />
+        <input asp-for="RUT" class="form-control"
+               data-i18n-placeholder="form.rutPlaceholder"
+               placeholder="Ej: 210123456789" />
         <span asp-validation-for="RUT" class="text-danger small"></span>
     </div>
     <div class="col-12">
         <label asp-for="Direccion" class="form-label"></label>
-        <input asp-for="Direccion" class="form-control" placeholder="Ej: Av. 18 de Julio 1234, Montevideo" />
+        <input asp-for="Direccion" class="form-control"
+               data-i18n-placeholder="form.direccionPlaceholder"
+               placeholder="Ej: Av. 18 de Julio 1234, Montevideo" />
         <span asp-validation-for="Direccion" class="text-danger small"></span>
     </div>
     <div class="col-md-4">
         <label asp-for="Telefono" class="form-label"></label>
-        <input asp-for="Telefono" class="form-control" placeholder="Ej: 2908-1234" />
+        <input asp-for="Telefono" class="form-control"
+               data-i18n-placeholder="form.telefonoPlaceholder"
+               placeholder="Ej: 2908-1234" />
         <span asp-validation-for="Telefono" class="text-danger small"></span>
     </div>
     <div class="col-md-4">
         <label asp-for="Email" class="form-label"></label>
-        <input asp-for="Email" class="form-control" type="email" placeholder="Ej: compras@empresa.com" />
+        <input asp-for="Email" class="form-control" type="email"
+               data-i18n-placeholder="form.emailPlaceholder"
+               placeholder="Ej: compras@empresa.com" />
         <span asp-validation-for="Email" class="text-danger small"></span>
     </div>
     <div class="col-md-4">
         <label asp-for="Contacto" class="form-label"></label>
-        <input asp-for="Contacto" class="form-control" placeholder="Ej: María González" />
+        <input asp-for="Contacto" class="form-control"
+               data-i18n-placeholder="form.contactoPlaceholder"
+               placeholder="Ej: María González" />
         <span asp-validation-for="Contacto" class="text-danger small"></span>
     </div>
 </div>

@@ -8,18 +8,17 @@
 <div class="container-fluid py-4 px-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold mb-1"><i class="bi bi-box me-2"></i>Productos</h2>
-            <p class="text-muted mb-0">@Model.TotalItemCount productos registrados</p>
+            <h2 class="fw-bold mb-1"><i class="bi bi-box me-2"></i><span data-i18n="productos.title">Productos</span></h2>
+            <p class="text-muted mb-0">@Model.TotalItemCount <span data-i18n="productos.registrados">productos registrados</span></p>
         </div>
         @if (User.IsInRole("Admin") || User.IsInRole("Vendedor"))
         {
             <a asp-action="Create" class="btn btn-primary">
-                <i class="bi bi-plus-circle me-2"></i>Nuevo Producto
+                <i class="bi bi-plus-circle me-2"></i><span data-i18n="productos.nuevo">Nuevo Producto</span>
             </a>
         }
     </div>
 
-    <!-- Filters -->
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body py-3">
             <form method="get" class="row g-2 align-items-end">
@@ -27,13 +26,14 @@
                     <div class="input-group">
                         <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
                         <input type="text" name="busqueda" class="form-control"
+                               data-i18n-placeholder="productos.buscarPlaceholder"
                                placeholder="Buscar por nombre, código..."
                                value="@ViewBag.BusquedaActual" />
                     </div>
                 </div>
                 <div class="col-md-3">
                     <select name="categoriaId" class="form-select">
-                        <option value="">Todas las categorías</option>
+                        <option value="" data-i18n="productos.todasCategorias">Todas las categorías</option>
                         @foreach (var cat in categorias)
                         {
                             var selected = ViewBag.CategoriaActual?.ToString() == cat.Value;
@@ -47,12 +47,12 @@
                                class="form-check-input" id="chkStock"
                                @(ViewBag.StockBajoActual == true ? "checked" : "") />
                         <label class="form-check-label" for="chkStock">
-                            <i class="bi bi-exclamation-triangle text-danger me-1"></i>Stock bajo
+                            <i class="bi bi-exclamation-triangle text-danger me-1"></i><span data-i18n="productos.stockBajo">Stock bajo</span>
                         </label>
                     </div>
                 </div>
                 <div class="col-md-3 d-flex gap-2">
-                    <button type="submit" class="btn btn-dark flex-fill">Filtrar</button>
+                    <button type="submit" class="btn btn-dark flex-fill" data-i18n="productos.filtrar">Filtrar</button>
                     @if (!string.IsNullOrEmpty(ViewBag.BusquedaActual) ||
                          ViewBag.CategoriaActual != null ||
                          ViewBag.StockBajoActual == true)
@@ -66,19 +66,18 @@
         </div>
     </div>
 
-    <!-- Table -->
     <div class="card border-0 shadow-sm">
         <div class="table-responsive">
             <table class="table table-hover mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>Código</th>
-                        <th>Nombre</th>
-                        <th>Categoría</th>
-                        <th class="text-end">Precio</th>
-                        <th class="text-center">Stock</th>
-                        <th>Estado</th>
-                        <th class="text-end">Acciones</th>
+                        <th data-i18n="productos.thCodigo">Código</th>
+                        <th data-i18n="productos.thNombre">Nombre</th>
+                        <th data-i18n="productos.thCategoria">Categoría</th>
+                        <th class="text-end" data-i18n="productos.thPrecio">Precio</th>
+                        <th class="text-center" data-i18n="productos.thStock">Stock</th>
+                        <th data-i18n="productos.thEstado">Estado</th>
+                        <th class="text-end" data-i18n="productos.thAcciones">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -87,7 +86,7 @@
                         <tr>
                             <td colspan="7" class="text-center py-5 text-muted">
                                 <i class="bi bi-inbox display-6 d-block mb-2"></i>
-                                <span>No se encontraron productos</span>
+                                <span data-i18n="productos.sinResultados">No se encontraron productos</span>
                             </td>
                         </tr>
                     }
@@ -121,26 +120,26 @@
                                 @if (prod.StockBajo)
                                 {
                                     <span class="text-danger small">
-                                        <i class="bi bi-exclamation-triangle me-1"></i>Stock bajo
+                                        <i class="bi bi-exclamation-triangle me-1"></i><span data-i18n="productos.estadoStockBajo">Stock bajo</span>
                                     </span>
                                 }
                                 else
                                 {
                                     <span class="text-success small">
-                                        <i class="bi bi-check-circle me-1"></i>OK
+                                        <i class="bi bi-check-circle me-1"></i><span data-i18n="productos.estadoOk">OK</span>
                                     </span>
                                 }
                             </td>
                             <td class="text-end">
                                 <div class="btn-group btn-group-sm">
                                     <a asp-action="Details" asp-route-id="@prod.Id"
-                                       class="btn btn-outline-secondary" title="Ver">
+                                       class="btn btn-outline-secondary" data-i18n-title="common.ver" title="Ver">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                     @if (User.IsInRole("Admin") || User.IsInRole("Vendedor"))
                                     {
                                         <a asp-action="Edit" asp-route-id="@prod.Id"
-                                           class="btn btn-outline-primary" title="Editar">
+                                           class="btn btn-outline-primary" data-i18n-title="common.editar" title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                     }
@@ -148,6 +147,7 @@
                                     {
                                         <form asp-action="Delete" asp-route-id="@prod.Id" method="post"
                                               class="d-inline"
+                                              data-i18n-confirm="productos.confirmarEliminar"
                                               onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
                                             @Html.AntiForgeryToken()
                                             <button type="submit" class="btn btn-outline-danger" title="Eliminar">

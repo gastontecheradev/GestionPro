@@ -13,6 +13,55 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/landing.css" asp-append-version="true" />
     <link rel="icon" type="image/png" href="/images/favicon.png">
+
+    <style>
+        /* Language toggle para landing (fondo claro/oscuro según scroll) */
+        .landing-lang-toggle {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,.2);
+            border-radius: 6px;
+            overflow: hidden;
+            height: 30px;
+        }
+        .landing-lang-toggle [data-lang] {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
+            height: 100%;
+            font-size: .72rem;
+            font-weight: 600;
+            letter-spacing: .04em;
+            color: rgba(255,255,255,.55);
+            cursor: pointer;
+            text-decoration: none;
+            transition: background .15s, color .15s;
+            border: none;
+            background: transparent;
+            line-height: 1;
+        }
+        .landing-lang-toggle [data-lang]:hover {
+            color: rgba(255,255,255,.9);
+            background: rgba(255,255,255,.12);
+        }
+        .landing-lang-toggle [data-lang].active {
+            background: rgba(255,255,255,.22);
+            color: #fff;
+        }
+        .landing-lang-toggle .lang-divider {
+            width: 1px;
+            height: 14px;
+            background: rgba(255,255,255,.25);
+            flex-shrink: 0;
+        }
+        .landing-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+    </style>
 </head>
 <body>
 
@@ -26,22 +75,29 @@
                 @if (User.Identity?.IsAuthenticated == true)
                 {
                     <a asp-controller="Dashboard" asp-action="Index" class="nav-link-landing">
-                        <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                        <i class="bi bi-speedometer2 me-1"></i><span data-i18n="nav.dashboard">Dashboard</span>
                     </a>
                     <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="d-inline">
                         <button type="submit" class="nav-btn-register">
-                            <i class="bi bi-box-arrow-right me-1"></i>Salir
+                            <i class="bi bi-box-arrow-right me-1"></i><span data-i18n="nav.cerrarSesion">Salir</span>
                         </button>
                     </form>
                 }
                 else
                 {
-                    <a href="#demo" class="nav-link-landing">Demo</a>
-                    <a href="#features" class="nav-link-landing">Funcionalidades</a>
+                    <a href="#demo" class="nav-link-landing" data-i18n="landing.navDemo">Demo</a>
+                    <a href="#features" class="nav-link-landing" data-i18n="landing.navFeatures">Funcionalidades</a>
                     <a asp-area="Identity" asp-page="/Account/Login" class="nav-btn-login">
-                        <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar sesión
+                        <i class="bi bi-box-arrow-in-right me-1"></i><span data-i18n="nav.iniciarSesion">Iniciar sesión</span>
                     </a>
                 }
+
+                <!-- Language toggle -->
+                <div class="landing-lang-toggle gp-lang-toggle" title="Language / Idioma">
+                    <button data-lang="es" class="active">ES</button>
+                    <span class="lang-divider"></span>
+                    <button data-lang="en">EN</button>
+                </div>
             </div>
         </div>
     </nav>
@@ -50,9 +106,9 @@
     <section class="hero">
         <div class="hero-content">
             <h1 class="anim anim-d1">
-                Sistema de Gestión<br /><span>Empresarial</span>
+                <span data-i18n="landing.heroTitle">Sistema de Gestión</span><br /><span data-i18n="landing.heroSubtitle">Empresarial</span>
             </h1>
-            <p class="hero-subtitle anim anim-d2">
+            <p class="hero-subtitle anim anim-d2" data-i18n="landing.heroDesc">
                 Aplicación completa de distribución mayorista con gestión de clientes,
                 productos, órdenes, facturación, roles y auditoría automática.
             </p>
@@ -60,13 +116,13 @@
                 @if (User.Identity?.IsAuthenticated == true)
                 {
                     <a asp-controller="Dashboard" asp-action="Index" class="btn-hero btn-hero-primary">
-                        <i class="bi bi-speedometer2"></i>Ir al Dashboard
+                        <i class="bi bi-speedometer2"></i><span data-i18n="landing.irDashboard">Ir al Dashboard</span>
                     </a>
                 }
                 else
                 {
                     <a href="#demo" class="btn-hero btn-hero-primary">
-                        <i class="bi bi-play-circle"></i>Probar Demo
+                        <i class="bi bi-play-circle"></i><span data-i18n="landing.probarDemo">Probar Demo</span>
                     </a>
                 }
             </div>
@@ -76,39 +132,39 @@
     <!-- ═══ FEATURES ═══ -->
     <section class="features-section" id="features">
         <div class="features-header">
-            <h2>Funcionalidades del Sistema</h2>
-            <p>Todo lo que una empresa de distribución necesita, en una sola aplicación</p>
+            <h2 data-i18n="landing.featuresTitle">Funcionalidades del Sistema</h2>
+            <p data-i18n="landing.featuresSubtitle">Todo lo que una empresa de distribución necesita, en una sola aplicación</p>
         </div>
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon blue"><i class="bi bi-people"></i></div>
-                <h5>Gestión de Clientes</h5>
-                <p>CRUD completo con búsqueda en tiempo real, paginación server-side y soft delete para mantener integridad.</p>
+                <h5 data-i18n="landing.feat1Title">Gestión de Clientes</h5>
+                <p data-i18n="landing.feat1Desc">CRUD completo con búsqueda en tiempo real, paginación server-side y soft delete para mantener integridad.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon green"><i class="bi bi-box-seam"></i></div>
-                <h5>Productos y Stock</h5>
-                <p>Control de inventario con alertas de stock mínimo, categorías, códigos SKU y filtros avanzados.</p>
+                <h5 data-i18n="landing.feat2Title">Productos y Stock</h5>
+                <p data-i18n="landing.feat2Desc">Control de inventario con alertas de stock mínimo, categorías, códigos SKU y filtros avanzados.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon amber"><i class="bi bi-cart3"></i></div>
-                <h5>Órdenes Dinámicas</h5>
-                <p>Creación con líneas dinámicas vía JavaScript, cálculo automático de IVA (22%), y gestión de estados.</p>
+                <h5 data-i18n="landing.feat3Title">Órdenes Dinámicas</h5>
+                <p data-i18n="landing.feat3Desc">Creación con líneas dinámicas vía JavaScript, cálculo automático de IVA (22%), y gestión de estados.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon red"><i class="bi bi-receipt"></i></div>
-                <h5>Facturación</h5>
-                <p>Generación desde órdenes aprobadas con numeración correlativa, control de pagos e impresión.</p>
+                <h5 data-i18n="landing.feat4Title">Facturación</h5>
+                <p data-i18n="landing.feat4Desc">Generación desde órdenes aprobadas con numeración correlativa, control de pagos e impresión.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon navy"><i class="bi bi-shield-lock"></i></div>
-                <h5>Roles y Permisos</h5>
-                <p>Tres niveles de acceso (Admin, Vendedor, Viewer) con ASP.NET Identity y autorización por atributos.</p>
+                <h5 data-i18n="landing.feat5Title">Roles y Permisos</h5>
+                <p data-i18n="landing.feat5Desc">Tres niveles de acceso (Admin, Vendedor, Viewer) con ASP.NET Identity y autorización por atributos.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon purple"><i class="bi bi-clock-history"></i></div>
-                <h5>Auditoría Automática</h5>
-                <p>Registro de cada cambio en JSON: quién modificó qué, cuándo, con valores anteriores y nuevos.</p>
+                <h5 data-i18n="landing.feat6Title">Auditoría Automática</h5>
+                <p data-i18n="landing.feat6Desc">Registro de cada cambio en JSON: quién modificó qué, cuándo, con valores anteriores y nuevos.</p>
             </div>
         </div>
     </section>
@@ -116,8 +172,8 @@
     <!-- ═══ DEMO ACCESS ═══ -->
     <section class="demo-section" id="demo">
         <div class="demo-content">
-            <h2>Probá el Sistema</h2>
-            <p>Elegí un rol para explorar el sistema. La demo es de solo lectura para proteger los datos.</p>
+            <h2 data-i18n="landing.demoTitle">Probá el Sistema</h2>
+            <p data-i18n="landing.demoDesc">Elegí un rol para explorar el sistema. La demo es de solo lectura para proteger los datos.</p>
 
             <form method="post" action="/Identity/Account/Login" id="demoForm">
                 @Html.AntiForgeryToken()
@@ -129,34 +185,34 @@
                     <div class="demo-card admin" onclick="submitDemo('admin@@gestionpro.com', 'Admin123!')">
                         <div class="demo-card-header">
                             <span class="demo-card-role"><i class="bi bi-shield-fill me-1"></i>Admin</span>
-                            <span class="demo-card-badge">Acceso total</span>
+                            <span class="demo-card-badge" data-i18n="landing.demoAdminBadge">Acceso total</span>
                         </div>
                         <ul class="demo-card-perms">
-                            <li><i class="bi bi-check-lg"></i>Dashboard con métricas</li>
-                            <li><i class="bi bi-check-lg"></i>CRUD de clientes y productos</li>
-                            <li><i class="bi bi-check-lg"></i>Crear y gestionar órdenes</li>
-                            <li><i class="bi bi-check-lg"></i>Generar facturas</li>
-                            <li><i class="bi bi-check-lg"></i>Eliminar registros</li>
+                            <li><i class="bi bi-check-lg"></i><span data-i18n="landing.demoPerm1">Dashboard con métricas</span></li>
+                            <li><i class="bi bi-check-lg"></i><span data-i18n="landing.demoPerm2">CRUD de clientes y productos</span></li>
+                            <li><i class="bi bi-check-lg"></i><span data-i18n="landing.demoPerm3">Crear y gestionar órdenes</span></li>
+                            <li><i class="bi bi-check-lg"></i><span data-i18n="landing.demoPerm4">Generar facturas</span></li>
+                            <li><i class="bi bi-check-lg"></i><span data-i18n="landing.demoPerm5">Eliminar registros</span></li>
                         </ul>
                         <button type="button" class="demo-card-btn">
-                            <i class="bi bi-box-arrow-in-right me-1"></i> Entrar como Admin
+                            <i class="bi bi-box-arrow-in-right me-1"></i><span data-i18n="landing.demoEnterAdmin">Entrar como Admin</span>
                         </button>
                     </div>
 
                     <div class="demo-card vendedor" onclick="submitDemo('vendedor@@gestionpro.com', 'Vendedor123!')">
                         <div class="demo-card-header">
                             <span class="demo-card-role"><i class="bi bi-person-badge me-1"></i>Vendedor</span>
-                            <span class="demo-card-badge">Operativo</span>
+                            <span class="demo-card-badge" data-i18n="landing.demoVendedorBadge">Operativo</span>
                         </div>
                         <ul class="demo-card-perms">
-                            <li><i class="bi bi-check-lg"></i>Dashboard con métricas</li>
-                            <li><i class="bi bi-check-lg"></i>Crear y editar clientes</li>
-                            <li><i class="bi bi-check-lg"></i>Crear y editar productos</li>
-                            <li><i class="bi bi-check-lg"></i>Crear órdenes</li>
-                            <li><i class="bi bi-x-lg"></i>No puede eliminar registros</li>
+                            <li><i class="bi bi-check-lg"></i><span data-i18n="landing.demoPerm1">Dashboard con métricas</span></li>
+                            <li><i class="bi bi-check-lg"></i><span data-i18n="landing.demoPerm6">Crear y editar clientes</span></li>
+                            <li><i class="bi bi-check-lg"></i><span data-i18n="landing.demoPerm7">Crear y editar productos</span></li>
+                            <li><i class="bi bi-check-lg"></i><span data-i18n="landing.demoPerm8">Crear órdenes</span></li>
+                            <li><i class="bi bi-x-lg"></i><span data-i18n="landing.demoPerm9">No puede eliminar registros</span></li>
                         </ul>
                         <button type="button" class="demo-card-btn">
-                            <i class="bi bi-box-arrow-in-right me-1"></i> Entrar como Vendedor
+                            <i class="bi bi-box-arrow-in-right me-1"></i><span data-i18n="landing.demoEnterVendedor">Entrar como Vendedor</span>
                         </button>
                     </div>
                 </div>
@@ -164,7 +220,7 @@
 
             <div class="demo-readonly-note">
                 <i class="bi bi-lock-fill"></i>
-                Demo de solo lectura — los datos no se modifican
+                <span data-i18n="landing.demoReadonly">Demo de solo lectura — los datos no se modifican</span>
             </div>
         </div>
     </section>
@@ -172,7 +228,7 @@
     <!-- ═══ FOOTER ═══ -->
     <footer class="landing-footer">
         <p>
-            Desarrollado por <strong>Gastón Techera</strong>
+            <span data-i18n="footer.by">Desarrollado por</span> <strong>Gastón Techera</strong>
             <a href="https://github.com/gastontecheradev" target="_blank"><i class="bi bi-github"></i> GitHub</a>
             <a href="https://www.linkedin.com/in/gaston-techera-dev/" target="_blank"><i class="bi bi-linkedin"></i> LinkedIn</a>
         </p>
@@ -193,5 +249,6 @@
             });
         });
     </script>
+    <script src="~/js/i18n.js" asp-append-version="true"></script>
 </body>
 </html>
