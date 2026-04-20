@@ -54,8 +54,3 @@ GestionPro/
 - **Soft Delete with Global Query Filters** — Automatic filtering on every query
 - **Automatic Auditing** — SaveChanges override for change tracking
 - **Code First Migrations** — Database versioned alongside the codebase
-
-## Author
-
-**Gastón Techera** — .NET Developer  
-[Portfolio](https://gastontecheradev.github.io/portfolio-react) · [LinkedIn](https://www.linkedin.com/in/gaston-techera-dev/) · [GitHub](https://github.com/gastontecheradev)
