@@ -1,60 +1,59 @@
-# GestionPro — Sistema de Gestión Empresarial
+# GestionPro — Business Management System
 
-Sistema de gestión para distribución mayorista construido con **ASP.NET Core 8 MVC**, **Entity Framework Core** y **SQLite**.
+Management system for wholesale distribution built with **ASP.NET Core 8 MVC**, **Entity Framework Core**, and **SQLite**.
 
-## Funcionalidades
+## Features
 
-- **Gestión de Clientes** — CRUD completo con búsqueda y paginación server-side
-- **Productos y Stock** — Control de inventario con alertas de stock bajo
-- **Órdenes de Compra** — Múltiples líneas de detalle, estados y cálculo automático de IVA
-- **Facturación** — Generación desde órdenes aprobadas con numeración correlativa
-- **Dashboard** — Métricas en tiempo real: ventas, stock, órdenes pendientes
-- **Autenticación y Roles** — Admin, Vendedor y Viewer con ASP.NET Identity
-- **Auditoría** — Registro automático de cambios (quién, qué, cuándo)
-- **Soft Delete** — Los registros se desactivan en vez de borrarse
+- **Customer Management** — Full CRUD with server-side search and pagination
+- **Products & Stock** — Inventory control with low stock alerts
+- **Purchase Orders** — Multiple detail lines, statuses, and automatic VAT calculation
+- **Invoicing** — Generated from approved orders with sequential numbering
+- **Dashboard** — Real-time metrics: sales, stock, pending orders
+- **Authentication & Roles** — Admin, Seller, and Viewer with ASP.NET Identity
+- **Audit Log** — Automatic change tracking (who, what, when)
+- **Soft Delete** — Records are deactivated instead of deleted
 
-## Stack Técnico
+## Tech Stack
 
-| Capa | Tecnología |
-|------|-----------|
+| Layer | Technology |
+|-------|-----------|
 | Framework | ASP.NET Core 8 MVC |
-| Lenguaje | C# 12 |
+| Language | C# 12 |
 | ORM | Entity Framework Core 8 (Code First) |
-| Base de Datos | SQLite |
-| Autenticación | ASP.NET Identity con Roles |
+| Database | SQLite |
+| Authentication | ASP.NET Identity with Roles |
 | Frontend | Razor Views + Bootstrap 5 |
-| Validación | Data Annotations + FluentValidation |
-| Paginación | X.PagedList |
-| Mapeo | AutoMapper |
+| Validation | Data Annotations + FluentValidation |
+| Pagination | X.PagedList |
+| Mapping | AutoMapper |
 
-## Arquitectura
+## Architecture
 
 ```
 GestionPro/
-├── Controllers/          ← Reciben requests, delegan al servicio
+├── Controllers/          ← Receive requests, delegate to service layer
 ├── Models/
-│   ├── Entities/         ← Clases que mapean a tablas
-│   ├── ViewModels/       ← DTOs para las vistas
+│   ├── Entities/         ← Classes mapped to database tables
+│   ├── ViewModels/       ← DTOs for views
 │   └── Enums/
 ├── Services/
-│   ├── Interfaces/       ← Contratos
-│   └── Implementations/  ← Lógica de negocio
+│   ├── Interfaces/       ← Contracts
+│   └── Implementations/  ← Business logic
 ├── Data/
-│   ├── AppDbContext.cs   ← DbContext con soft delete y auditoría
-│   └── SeedData.cs       ← Datos iniciales
+│   ├── AppDbContext.cs   ← DbContext with soft delete and auditing
+│   └── SeedData.cs       ← Initial seed data
 ├── Views/                ← Razor Views
-└── Program.cs            ← Configuración
+└── Program.cs            ← App configuration
 ```
 
+## Patterns & Practices
 
-## Patrones y Prácticas
+- **Service Layer Pattern** — Business logic separated from controllers
+- **Soft Delete with Global Query Filters** — Automatic filtering on every query
+- **Automatic Auditing** — SaveChanges override for change tracking
+- **Code First Migrations** — Database versioned alongside the codebase
 
-- **Service Layer Pattern** — Lógica de negocio separada de controllers
-- **Soft Delete con Global Query Filters** — Filtrado automático en cada consulta
-- **Auditoría automática** — Override de SaveChanges para tracking de cambios
-- **Code First Migrations** — La DB se versiona junto con el código
+## Author
 
-## Autor
-
-**Gastón Techera** — Desarrollador .NET  
+**Gastón Techera** — .NET Developer  
 [Portfolio](https://gastontecheradev.github.io/portfolio-react) · [LinkedIn](https://www.linkedin.com/in/gaston-techera-dev/) · [GitHub](https://github.com/gastontecheradev)
